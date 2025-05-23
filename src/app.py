@@ -5,11 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 import click
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
+from flask_jwt_extended import JWTManager
 
 
 Base = declarative_base()
 
 db = SQLAlchemy(model_class=Base)
+
+jwt = JWTManager()
 
 
 class User(db.Model):
@@ -61,8 +64,10 @@ def create_app(test_config=None):
    
     app.cli.add_command(init_db_command)
 
-    db.init_app(app)
 
+# initialize extensions
+    db.init_app(app)
+    jwt.init_app(app)
 
     #register blueprints
     from src.controllers import user
